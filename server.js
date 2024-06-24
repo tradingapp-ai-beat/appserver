@@ -8,13 +8,19 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Use the CORS middleware with specific configuration
+// Improved CORS configuration to support various clients including preflight checks
 app.use(cors({
-    origin: ['*'], // Allow all origins (adjust for production)
-    method: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    maxAgeSeconds: 3600, // Cache preflight requests for 1 hour
-    allowedHeaders: ['Content-Type', 'Authorization'] // Allow specified headers
-}));app.use(express.json());
+    origin: '*',  // Adjust this in production for security reasons
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+}));
+app.use(express.json());
+
+// Handling preflight for all routes, necessary if your clients do preflight checks
+app.options('*', cors());
 
 app.post('/analyze', async (req, res) => {
     const { imageUrl } = req.body;
@@ -121,7 +127,7 @@ app.post('/advice', async (req, res) => {
         res.json({ advice: responseData.choices[0].message.content });
     } catch (error) {
         console.error('Error getting advice from image:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: 'Failed to get advice from image', details: error.response ? error.response.data : error.message });
+        res.status 500).json({ error: 'Failed to get advice from image', details: error.response ? error.response.data : error.message });
     }
 });
 
