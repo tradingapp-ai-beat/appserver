@@ -10,11 +10,11 @@ const port = process.env.PORT || 3000;
 
 // Use the CORS middleware with specific configuration
 app.use(cors({
-    origin: '*', // Allow all origins
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow these HTTP methods
-    allowedHeaders: 'Content-Type, Authorization' // Allow these headers
-}));
-app.use(express.json());
+    origin: ['*'], // Allow all origins (adjust for production)
+    method: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    maxAgeSeconds: 3600, // Cache preflight requests for 1 hour
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allow specified headers
+}));app.use(express.json());
 
 app.post('/analyze', async (req, res) => {
     const { imageUrl } = req.body;
