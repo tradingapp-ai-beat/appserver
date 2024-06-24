@@ -1,10 +1,9 @@
 {
   "name": "my-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "build": "npm install"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
