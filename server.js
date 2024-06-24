@@ -8,7 +8,12 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+// Use the CORS middleware with specific configuration
+app.use(cors({
+    origin: '*', // Allow all origins
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow these HTTP methods
+    allowedHeaders: 'Content-Type, Authorization' // Allow these headers
+}));
 app.use(express.json());
 
 app.post('/analyze', async (req, res) => {
