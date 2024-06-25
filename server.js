@@ -9,19 +9,17 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Specific CORS configuration to support your client domain
-const corsOptions = {
-  origin: 'https://www.app.dividendbeat.com', // Only allow this origin
-  methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  optionsSuccessStatus: 200 // for legacy browsers (IE11, various SmartTVs)
-};
-
-app.use(cors(corsOptions));
+origin: ['https://www.app.dividendbeat.com'],   // Adjust this in production for security reasons
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+}));
 app.use(express.json());
 
 // Handling preflight for all routes, necessary if your clients do preflight checks
-app.options('*', cors(corsOptions));
+app.options('*', cors());
 
 app.post('/analyze', async (req, res) => {
     const { imageUrl } = req.body;
