@@ -9,9 +9,12 @@ const port = process.env.PORT || 3000;
 
 // Custom CORS Middleware
 const allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'https://www.app.dividendbeat.com'); // Adjust the allowed origin
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Max-Age', '86400'); // 24 hours
+
+    // Respond to preflight requests
     if (req.method === 'OPTIONS') {
         res.sendStatus(200);
     } else {
@@ -27,6 +30,11 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Welcome to the Dividend Beat Server App!');
+});
+
+app.use((err, req, res, next) => {
+    console.error('Server Error:', err);
+    res.status(500).json({ error: 'Internal Server Error', details: err.message });
 });
 
 app.post('/analyze', async (req, res) => {
