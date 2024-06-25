@@ -14,42 +14,20 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Custom CORS Middleware
-const allowCrossDomain = function(req, res, next) {
-  console.log('CORS middleware called');
-  console.log('Request method:', req.method);
-  console.log('Request headers:', req.headers);
-
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Max-Age', '86400');
-
-  if (req.method === 'OPTIONS') {
-    console.log('Responding to OPTIONS request');
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-};
-
-// Apply custom CORS middleware
-app.use(allowCrossDomain);
-
 // Middleware for parsing JSON bodies
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Dividend Beat Server App!');
-});
-
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Server Error:', err);
     res.status(500).json({ error: 'Internal Server Error', details: err.message });
 });
 
+app.get('/', (req, res) => {
+    res.send('Welcome to the Dividend Beat Server App!');
+});
+
 app.get('/cors-test', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://www.app.dividendbeat.com');
   res.json({ message: 'CORS test successful' });
 });
 
