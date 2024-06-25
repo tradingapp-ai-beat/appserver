@@ -74,7 +74,7 @@ app.post('/advice', async (req, res) => {
                     { type: 'text', text: 'Please analyze the provided chart image and give detailed trading advice. Follow the structured prompts below for a comprehensive analysis:' },
                     {
                         type: 'text',
-                        text: `1. **Financial Product and Time Frame Extraction:**
+                        text: `1. **Financiaal Product and Time Frame Extraction:**
     - Extract the financial product name and the time frame from the provided chart.
 
     2. **Strategy Evaluation:**
@@ -93,7 +93,7 @@ app.post('/advice', async (req, res) => {
     - Describe the pattern and its implications for trading decisions.
 
     5. **Leverage and Risk Management:**
-    - Provide advice on the appropriate leverage to use given the current market conditions and the analyzed strategy.
+    - Provide advice on the appropriate leverage to be use given the current market conditions and the analyzed strategy.
     - Offer comprehensive risk management advice, focusing on safe trading practices and minimizing potential losses.
 
     6. **Market Timing:**
