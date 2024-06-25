@@ -14,20 +14,20 @@ jobs:
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Login to Azure (replace with your service principal details)
+      - name: Login to Azure
         uses: azure/login@v1
         with:
-          cli_id: ${{ secrets.AZURE_CLIENT_ID }}
-          client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          tenant: ${{ secrets.AZURE_TENANT_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Build the project (if necessary)
-        run: npm run build  # Replace with your build command
+        run: npm run build  # Replace this with your actual build command if different
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
