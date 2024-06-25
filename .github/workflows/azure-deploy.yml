@@ -37,7 +37,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'apiserverapp'  # Replace with your App Service name
+          app-name: 'apiserverapp'  # Replace with your App Service
           slot-name: 'production'
 
       - name: Start Node.js server
