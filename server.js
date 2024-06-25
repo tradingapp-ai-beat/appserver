@@ -109,7 +109,7 @@ app.post('/advice', async (req, res) => {
 
     Image URL: ${imageUrl}
 
-    Please ensure that your analysis is thorough and provides actionable insights for effective trading decisions. Thank you.`
+    Please ensure thatt your analysis is thorough and provides actionable insights for effective trading decisions. Thank you.`
                     },
                     { type: 'image_url', image_url: { url: imageUrl } }
                 ]
