@@ -17,32 +17,27 @@ jobs:
         with:
           node-version: '14'  # or your preferred Node.js version
 
-      - name: List directory contents
-        run: ls -la
-
-      - name: Display package.json content
-        run: cat package.json
-
-      - name: Display npm config
-        run: npm config list
-
       - name: Install dependencies
         run: npm install
 
-      - name: Login to Azure
+      - name: Azure CLI Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Azure CLI Version
+        run: az --version
+
+      - name: Azure Account Show
+        run: az account show
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'apiserverapp'  # Replace with your App Service
+          app-name: 'apiserverapp'  # Replace with your App Service name
           slot-name: 'production'
 
       - name: Start Node.js server
-        env:
-          WEBSITE_RUN_FROM_PACKAGE: 0
         run: |
           npm start &
           echo "Server started"
@@ -50,7 +45,6 @@ jobs:
       - name: Check server status
         run: |
           sleep 10  # Give the server some time to start
-          curl http://localhost:3000 || echo "Server not responding on localhost"
           curl https://apiserverapp.azurewebsites.net || echo "Server not responding on Azure URL"
 
       - name: Display Azure Web App logs
