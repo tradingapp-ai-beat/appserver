@@ -1,25 +1,36 @@
 const express = require('express');
 const axios = require('axios');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors({
+  origin: 'https://www.app.dividendbeat.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // Custom CORS Middleware
 const allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Max-Age', '86400'); // 24 hours
+  console.log('CORS middleware called');
+  console.log('Request method:', req.method);
+  console.log('Request headers:', req.headers);
 
-    // Respond to preflight requests
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Max-Age', '86400');
+
+  if (req.method === 'OPTIONS') {
+    console.log('Responding to OPTIONS request');
+    res.sendStatus(200);
+  } else {
+    next();
+  }
 };
 
 // Apply custom CORS middleware
@@ -35,6 +46,11 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
     console.error('Server Error:', err);
     res.status(500).json({ error: 'Internal Server Error', details: err.message });
+});
+
+app.get('/cors-test', (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://www.app.dividendbeat.com');
+  res.json({ message: 'CORS test successful' });
 });
 
 app.post('/analyze', async (req, res) => {
