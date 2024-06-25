@@ -1,0 +1,38 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches: [ main ]  # Trigger on main branch pushes
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Login to Azure (replace with your service principal details)
+        uses: azure/login@v1
+        with:
+          cli_id: ${{ secrets.AZURE_CLIENT_ID }}
+          client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Build the project (if necessary)
+        run: npm run build  # Replace with your build command
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          resource-group: my-server-rg  # Replace with your resource group name
+          app-service: my-server-app  # Replace with your app name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Create a publish profile in Azure Portal
+
