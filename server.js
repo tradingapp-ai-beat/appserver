@@ -10,7 +10,7 @@ const port = process.env.PORT || 3000;
 
 // Improved CORS configuration to support various clients including preflight checks
 app.use(cors({
-    origin: '*',  // Adjust this in production for security reasons
+    origin: ['https://www.app.dividendbeat.com'],   // Adjust this in production for security reasons
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
