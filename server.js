@@ -20,6 +20,10 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Dividend Beat Server App!');
+});
+
 app.post('/analyze', async (req, res) => {
     const { imageUrl } = req.body;
     const apiKey = process.env.OPENAI_API_KEY;
