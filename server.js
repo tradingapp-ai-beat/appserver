@@ -73,7 +73,7 @@ app.post('/advice', async (req, res) => {
                     { type: 'text', text: 'Please analyze the provided chart image and give detailed trading advice. Follow the structured prompts below for a comprehensive analysis:' },
                     {
                         type: 'text',
-                        text: `1. **Financial Product and Time Frame Extraction:**
+                        text: `1. **Financiaal Product and Time Frame Extraction:**
     - Extract the financial product name and the time frame from the provided chart.
 
     2. **Strategy Evaluation:**
