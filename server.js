@@ -8,17 +8,20 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Specific CORS configuration to support your client domain
 const corsOptions = {
-  origin: 'https://www.app.dividendbeat.com',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: 'https://www.app.dividendbeat.com', // Only allow this origin
+  methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200 // for legacy browsers (IE11, various SmartTVs)
 };
 
-// Improved CORS configuration to support various clients including preflight checks
 app.use(cors(corsOptions));
 app.use(express.json());
 
 // Handling preflight for all routes, necessary if your clients do preflight checks
-app.options('*', cors());
+app.options('*', cors(corsOptions));
 
 app.post('/analyze', async (req, res) => {
     const { imageUrl } = req.body;
