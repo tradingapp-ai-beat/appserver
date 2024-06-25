@@ -3,7 +3,7 @@ name: Deploy to Azure App Service
 on:
   push:
     branches:
-      - main  # or your default branch name
+      - main
 
 jobs:
   build-and-deploy:
@@ -15,7 +15,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # or your preferred Node.js version
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -25,28 +26,18 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Azure CLI Version
-        run: az --version
-
-      - name: Azure Account Show
-        run: az account show
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'apiserverapp'  # Replace with your App Service name
+          app-name: 'apiserverapp'
           slot-name: 'production'
 
-      - name: Start Node.js server
+      - name: Health Check
         run: |
-          npm start &
-          echo "Server started"
-
-      - name: Check server status
-        run: |
-          sleep 10  # Give the server some time to start
-          curl https://apiserverapp.azurewebsites.net || echo "Server not responding on Azure URL"
+          sleep 30  # Give the server time to start
+          curl https://apiserverapp.azurewebsites.net/health || echo "Health check failed"
 
       - name: Display Azure Web App logs
+        if: failure()  # Only run this step if previous steps failed
         run: |
           az webapp log tail --name apiserverapp --resource-group apiserver
