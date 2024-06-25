@@ -18,20 +18,10 @@ app.use(cors({
 app.use(express.json());
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Server Error:', err);
-    res.status(500).json({ error: 'Internal Server Error', details: err.message });
-});
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Dividend Beat Server App!');
-});
 
-app.get('/cors-test', (req, res) => {
-  res.json({ message: 'CORS test successful' });
-});
 
-app.post('/analyze', async (req, res) => {
+app.post('/analyze',cors(), async (req, res) => {
     const { imageUrl } = req.body;
     const apiKey = process.env.OPENAI_API_KEY;
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -68,7 +58,7 @@ app.post('/analyze', async (req, res) => {
     }
 });
 
-app.post('/advice', async (req, res) => {
+app.post('/advice',cors() , async (req, res) => {
     const { imageUrl, strategy, timeframes, additionalParameter, extractedTimeframe } = req.body;
     const apiKey = process.env.OPENAI_API_KEY;
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
