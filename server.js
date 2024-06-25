@@ -1,24 +1,32 @@
 const express = require('express');
 const axios = require('axios');
 const dotenv = require('dotenv');
-const cors = require('cors');
 
 dotenv.config();
 
-
+const app = express();
 const port = process.env.PORT || 3000;
 
+// Custom CORS Middleware
+const allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'https://www.app.dividendbeat.com'); // Adjust the allowed origin
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+};
 
+// Apply custom CORS middleware
+app.use(allowCrossDomain);
 
-var cors = require('cors')
-
-var app = express()
-app.use(cors())
-
+// Middleware for parsing JSON bodies
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Welcome to the Dividend Beat Server App!');
+    res.send('Welcome to the Dividend Beat Server App!');
 });
 
 app.post('/analyze', async (req, res) => {
@@ -70,44 +78,7 @@ app.post('/advice', async (req, res) => {
                 role: 'user',
                 content: [
                     { type: 'text', text: 'Please analyze the provided chart image and give detailed trading advice. Follow the structured prompts below for a comprehensive analysis:' },
-                    {
-                        type: 'text',
-                        text: `1. **Financiaal Product and Time Frame Extraction:**
-    - Extract the financial product name and the time frame from the provided chart.
-
-    2. **Strategy Evaluation:**
-    - Analyze the chosen strategy: ${strategy}.
-    - Provide a judgment on whether this strategy is suitable for the identified financial product and time frame: ${extractedTimeframe}.
-    - Include any additional considerations related to: ${additionalParameter}.
-
-    3. **Trade Recommendations:**
-    - Based on your analysis, indicate whether to buy or sell the financial product.
-    - Specify recommended take profit and stop loss levels.
-    - Discuss the use of pips for trading and provide buy/sell recommendations in pips if applicable.
-    - If trading contracts are involved, include relevant details about the contracts.
-
-    4. **Technical Analysis:**
-    - Conduct a candlestick analysis, identifying any patterns present in the chart.
-    - Describe the pattern and its implications for trading decisions.
-
-    5. **Leverage and Risk Management:**
-    - Provide advice on the appropriate leverage to be use given the current market conditions and the analyzed strategy.
-    - Offer comprehensive risk management advice, focusing on safe trading practices and minimizing potential losses.
-
-    6. **Market Timing:**
-    - Assess whether it is an optimal moment to enter the market or if it is advisable to wait.
-    - Justify your recommendation based on the current market conditions and chart analysis.
-
-    7. **General Market Insights:**
-    - Include any additional market insights or trends that could influence trading decisions.
-
-    8. **Final Advice:**
-    - Summarize your analysis and provide a clear and actionable recommendation based on all the factors considered.
-
-    Image URL: ${imageUrl}
-
-    Please ensure thatt your analysis is thorough and provides actionable insights for effective trading decisions. Thank you.`
-                    },
+                    { type: 'text', text: detailedTradingAdvice(strategy, extractedTimeframe, additionalParameter) },
                     { type: 'image_url', image_url: { url: imageUrl } }
                 ]
             }
@@ -126,7 +97,7 @@ app.post('/advice', async (req, res) => {
         res.json({ advice: responseData.choices[0].message.content });
     } catch (error) {
         console.error('Error getting advice from image:', error.response ? error.response.data : error.message);
-        res.status 500).json({ error: 'Failed to get advice from image', details: error.response ? error.response.data : error.message });
+        res.status(500).json({ error: 'Failed to get advice from image', details: error.response ? error.response.data : error.message });
     }
 });
 
@@ -134,6 +105,10 @@ function extractTimeframe(text) {
     const regex = /(minutes|hours|days|weeks|months)/i;
     const match = regex.exec(text);
     return match ? match[1].toLowerCase() : '';
+}
+
+function detailedTradingAdvice(strategy, timeframe, additional) {
+    return `1. **Financial Product and Time Frame Extraction:**\n- Extract the financial product name and the time frame from the provided chart.\n\n2. **Strategy Evaluation:**\n- Analyze the chosen strategy: ${strategy}.\n- Provide a judgment on whether this strategy is suitable for the identified financial product and time frame: ${timeframe}.\n- Include any additional considerations related to: ${additional}.\n\n3. **Trade Recommendations:**\n- Based on your analysis, indicate whether to buy or sell the financial product.\n- Specify recommended take profit and stop loss levels.\n- Discuss the use of pips for trading and provide buy/sell recommendations in pips if applicable.\n- If trading contracts are involved, include relevant details about the contracts.\n\n4. **Technical Analysis:**\n- Conduct a candlestick analysis, identifying any patterns present in the chart.\n- Describe the pattern and its implications for trading decisions.\n\n5. **Leverage and Risk Management:**\n- Provide advice on the appropriate leverage to be used given the current market conditions and the analyzed strategy.\n- Offer comprehensive risk management advice, focusing on safe trading practices and minimizing potential losses.\n\n6. **Market Timing:**\n- Assess whether it is an optimal moment to enter the market or if it is advisable to wait.\n- Justify your recommendation based on the current market conditions and chart analysis.\n\n7. **General Market Insights:**\n- Include any additional market insights or trends that could influence trading decisions.\n\n8. **Final Advice:**\n- Summarize your analysis and provide a clear and actionable recommendation based on all the factors considered.`;
 }
 
 app.listen(port, () => {
