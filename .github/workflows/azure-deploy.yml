@@ -1,0 +1,34 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main  # or your default branch name
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # or your preferred Node.js version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'apiserverapp'  # Replace with your App Service name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+
+      - name: Start Node.js server
+        env:
+          WEBSITE_RUN_FROM_PACKAGE: 0
+        run: |
+          npm start &
+          echo "Server started"
