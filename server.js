@@ -92,7 +92,7 @@ app.post('/advice', async (req, res) => {
     - Describe the pattern and its implications for trading decisions.
 
     5. **Leverage and Risk Management:**
-    - Provide advice on the appropriate leverage to use given the current market conditions and the analyzed strategy.
+    - Provide advice on the appropriate leverage to be use given the current market conditions and the analyzed strategy.
     - Offer comprehensive risk management advice, focusing on safe trading practices and minimizing potential losses.
 
     6. **Market Timing:**
