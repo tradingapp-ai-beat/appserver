@@ -29,11 +29,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'apiserverapp'  # Replace with your App Service name
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          slot-name: 'production'
 
       - name: Start Node.js server
         env:
@@ -50,6 +55,4 @@ jobs:
 
       - name: Display Azure Web App logs
         run: |
-          az webapp log tail --name apiserverapp --resource-group ApiServer
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          az webapp log tail --name apiserverapp --resource-group apiserver
