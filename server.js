@@ -15,6 +15,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(express.json());
+
 app.post('/analyze', async (req, res) => {
     const { imageUrl } = req.body;
     const apiKey = process.env.OPENAI_API_KEY;
