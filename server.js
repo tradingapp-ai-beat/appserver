@@ -10,7 +10,10 @@ const port = process.env.PORT || 3000;
 
 const corsOptions = {
   origin: 'https://www.app.dividendbeat.com',
-  optionsSuccessStatus: 200 // For legacy browser support
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true, // if your site includes credentials like cookies
+  allowedHeaders: ['Content-Type', 'Authorization'], // specify headers allowed during CORS
+  methods: ['GET', 'POST', 'PUT', 'DELETE'] // specify methods allowed during CORS
 };
 
 app.use(cors(corsOptions));
