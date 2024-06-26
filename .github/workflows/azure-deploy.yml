@@ -1,4 +1,4 @@
-name: Run Azure Login with Service Principal
+name: Run Azure Login with Interactive CLI
 
 on: [push]
 
@@ -9,7 +9,6 @@ jobs:
     steps:
       - uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
           enable-AzPSSession: true
 
       - name: Azure CLI script
