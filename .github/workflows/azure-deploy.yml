@@ -3,7 +3,7 @@ name: Deploy to Azure App Service
 on:
   push:
     branches:
-      - main
+      - main  # or your default branch name
 
 jobs:
   build-and-deploy:
@@ -31,7 +31,6 @@ jobs:
               "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
-      
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
@@ -45,6 +44,6 @@ jobs:
           curl https://apiserverapp.azurewebsites.net/health || echo "Health check failed"
 
       - name: Display Azure Web App logs
-        if: failure()  # Only run this step
+        if: failure()  # Only run this step if previous steps failed
         run: |
           az webapp log tail --name apiserverapp --resource-group apiserver
