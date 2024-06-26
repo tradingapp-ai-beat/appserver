@@ -12,7 +12,7 @@ app.listen(port, () => {
 });
 
 app.use(cors({
-  origin: 'https://www.app.dividendbeat.com',
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
