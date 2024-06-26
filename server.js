@@ -35,12 +35,9 @@ jobs:
         $ErrorActionPreference = 'Stop'
         $WarningPreference = 'SilentlyContinue'
 
-        $servicePrincipalConnection = @{
-            TenantId = "${{ secrets.AZURE_TENANT_ID }}"
-            ApplicationId = "${{ secrets.AZURE_CLIENT_ID }}"
-            Password = "${{ secrets.AZURE_CLIENT_SECRET }}"
-        }
-        Connect-AzAccount @servicePrincipalConnection
+        $securePassword = ConvertTo-SecureString "${{ secrets.AZURE_CLIENT_SECRET }}" -AsPlainText -Force
+        $creds = New-Object System.Management.Automation.PSCredential("${{ secrets.AZURE_CLIENT_ID }}", $securePassword)
+        Connect-AzAccount -ServicePrincipal -Credential $creds -TenantId ${{ secrets.AZURE_TENANT_ID }}
 
         # Your PowerShell script here
         Get-AzResourceGroup
