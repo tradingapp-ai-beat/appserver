@@ -3,12 +3,10 @@ name: Deploy Node.js App to Azure
 on: [push]
 
 jobs:
-
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-
     - uses: actions/checkout@v2
 
     - name: Use Node.js
