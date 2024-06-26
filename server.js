@@ -35,9 +35,12 @@ jobs:
         $ErrorActionPreference = 'Stop'
         $WarningPreference = 'SilentlyContinue'
 
-        $securePassword = ConvertTo-SecureString "${{ secrets.AZURE_CLIENT_SECRET }}" -AsPlainText -Force
-        $creds = New-Object System.Management.Automation.PSCredential("${{ secrets.AZURE_CLIENT_ID }}", $securePassword)
-        Connect-AzAccount -ServicePrincipal -Credential $creds -TenantId ${{ secrets.AZURE_TENANT_ID }}
+        # Get the access token from Azure CLI
+        $azAccessToken = az account get-access-token --resource https://management.azure.com/ | ConvertFrom-Json
+        $token = $azAccessToken.accessToken
+
+        # Use the token to authenticate in PowerShell
+        Connect-AzAccount -AccessToken $token -AccountId ${{ secrets.AZURE_CLIENT_ID }} -TenantId ${{ secrets.AZURE_TENANT_ID }}
 
         # Your PowerShell script here
         Get-AzResourceGroup
