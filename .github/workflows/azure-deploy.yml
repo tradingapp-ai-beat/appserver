@@ -38,6 +38,6 @@ jobs:
           curl https://apiserverapp.azurewebsites.net/health || echo "Health check failed"
 
       - name: Display Azure Web App logs
-        if: failure()  # Only run this step if
+        if: failure()  # Only run this step
         run: |
           az webapp log tail --name apiserverapp --resource-group apiserver
