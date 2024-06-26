@@ -25,6 +25,27 @@ jobs:
     - name: Login to Azure
       run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
+    - name: Setup Azure PowerShell
+      uses: azure/powershell@v2
+      with:
+        azPSVersion: 'latest'
+
+    - name: Run Azure PowerShell script
+      run: |
+        $ErrorActionPreference = 'Stop'
+        $WarningPreference = 'SilentlyContinue'
+
+        $servicePrincipalConnection = @{
+            TenantId = "${{ secrets.AZURE_TENANT_ID }}"
+            ApplicationId = "${{ secrets.AZURE_CLIENT_ID }}"
+            Password = "${{ secrets.AZURE_CLIENT_SECRET }}"
+        }
+        Connect-AzAccount @servicePrincipalConnection
+
+        # Your PowerShell script here
+        Get-AzResourceGroup
+      shell: pwsh
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
