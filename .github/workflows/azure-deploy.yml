@@ -12,13 +12,16 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18' #ssfdf
+          node-version: '18'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Login to Azure
         run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Set CORS policy
+        run: az webapp cors add --resource-group ApiServer --name ApiServeraPP --allowed-origins '*'
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
