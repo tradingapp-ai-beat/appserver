@@ -14,7 +14,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18.x'
+        node-version: '18'
 
     - name: Install dependencies
       run: npm ci
