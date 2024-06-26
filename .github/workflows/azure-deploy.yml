@@ -1,49 +1,28 @@
-name: Deploy to Azure App Service
+name: Run Azure Login with Service Principal
 
-on:
-  push:
-    branches:
-      - main  # or your default branch name
+on: [push]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - uses: azure/login@v2
         with:
-          node-version: '18'
-          cache: 'npm'
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Azure CLI Login
-        uses: azure/login@v1
+      - name: Azure CLI script
+        uses: azure/cli@v2
         with:
-          creds: |
-            {
-              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
-              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
-              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
-              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
-            }
+          azcliversion: latest
+          inlineScript: |
+            az account show
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+      - name: Azure PowerShell script
+        uses: azure/powershell@v2
         with:
-          app-name: 'apiserverapp'
-          slot-name: 'production'
-
-      - name: Health Check
-        run: |
-          sleep 30  # Give the server time to start
-          curl https://apiserverapp.azurewebsites.net/health || echo "Health check failed"
-
-      - name: Display Azure Web App logs
-        if: failure()  # Only run this step if previous
-        run: |
-          az webapp log tail --name apiserverapp --resource-group apiserver
+          azPSVersion: 'latest'
+          inlineScript: |
+            Get-AzContext
+            Get-AzResourceGroup
