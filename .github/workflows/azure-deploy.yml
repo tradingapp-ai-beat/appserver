@@ -1,7 +1,7 @@
 name: Run Azure Login with Service Principal
 
 on: [push]
-#test
+#testdfsdf
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
