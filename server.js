@@ -65,7 +65,32 @@ app.post('/advice', async (req, res) => {
             {
                 role: 'user',
                 content: [
-                    { type: 'text', text: 'Please analyze the provided chart image and give detailed trading advice. Follow the structured prompts below for a comprehensive analysis:' },
+                    { type: 'text', text: '1. **Financial Product and Time Frame Extraction:**\n'
+                                                             '- Extract the financial product name and the time frame from the provided chart.\n\n'
+                                                             '2. **Strategy Evaluation:**\n'
+                                                             '- Analyze the chosen strategy: $strategy.\n'
+                                                             '- Provide a judgment on whether this strategy is suitable for the identified financial product and time frame: $extractedTimeframe.\n'
+                                                             '- Include any additional considerations related to: $additionalParameter.\n\n'
+                                                             '3. **Trade Recommendations:**\n'
+                                                             '- Based on your analysis, indicate whether to buy or sell the financial product.\n'
+                                                             '- Specify recommended take profit and stop loss levels.\n'
+                                                             '- Discuss the use of pips for trading and provide buy/sell recommendations in pips if applicable.\n'
+                                                             '- If trading contracts are involved, include relevant details about the contracts.\n\n'
+                                                             '4. **Technical Analysis:**\n'
+                                                             '- Conduct a candlestick analysis, identifying any patterns present in the chart.\n'
+                                                             '- Describe the pattern and its implications for trading decisions.\n\n'
+                                                             '5. **Leverage and Risk Management:**\n'
+                                                             '- Provide advice on the appropriate leverage to use given the current market conditions and the analyzed strategy.\n'
+                                                             '- Offer comprehensive risk management advice, focusing on safe trading practices and minimizing potential losses.\n\n'
+                                                             '6. **Market Timing:**\n'
+                                                             '- Assess whether it is an optimal moment to enter the market or if it is advisable to wait.\n'
+                                                             '- Justify your recommendation based on the current market conditions and chart analysis.\n\n'
+                                                             '7. **General Market Insights:**\n'
+                                                             '- Include any additional market insights or trends that could influence trading decisions.\n\n'
+                                                             '8. **Final Advice:**\n'
+                                                             '- Summarize your analysis and provide a clear and actionable recommendation based on all the factors considered.\n\n'
+                                                             'Image URL: $imageUrl\n\n'
+                                                             'Please ensure that your analysis is thorough and provides actionable insights for effective trading decisions. Thank you.' },
                     { type: 'text', text: detailedTradingAdvice(strategy, extractedTimeframe, additionalParameter) },
                     { type: 'image_url', image_url: { url: imageUrl } }
                 ]
